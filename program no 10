@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_CHARS 256
+
+void charFrequency(char* s) {
+    int freq[MAX_CHARS] = {0};
+
+    int len = strlen(s);
+    for (int i = 0; i < len; i++) {
+        freq[(int)s[i]]++; 
+    }
+
+    for (int i = 0; i < MAX_CHARS; i++) {
+        if (freq[i] > 0) {
+            printf("Character '%c' has frequency %d\n", (char)i, freq[i]);
+        }
+    }
+}
+
+int main() {
+    char s[] = "hello world";
+    charFrequency(s);
+    return 0;
+}
