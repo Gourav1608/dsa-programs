@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_VERTICES 1000
+#define INF 99999
+
+int graph[MAX_VERTICES][MAX_VERTICES];
+int visited[MAX_VERTICES];
+int queue[MAX_VERTICES];
+int front = -1, rear = -1;
+
+void enqueue(int vertex) {
+    if (rear == MAX_VERTICES - 1)
+        printf("Queue Overflow\n");
+    else {
+        if (front == -1)
+            front = 0;
+        rear++;
+        queue[rear] = vertex;
+    }
+}
+
+int dequeue() {
+    int deletedItem;
+    if (front == -1 || front > rear) {
+        printf("Queue Underflow\n");
+        exit(1);
+    } else {
+        deletedItem = queue[front];
+        front++;
+        return deletedItem;
+    }
+}
+
+int isEmpty() {
+    if (front == -1 || front > rear)
+        return 1;
+    else
+        return 0;
+}
+
+void BFS(int start, int n) {
+    int current;
+    visited[start] = 1;
+    enqueue(start);
+
+    while (!isEmpty()) {
+        current = dequeue();
+        for (int i = 0; i < n; i++) {
+            if (graph[current][i] && !visited[i]) {
+                enqueue(i);
+                visited[i] = 1;
+                graph[start][i] = graph[start][current] + 1;
+            }
+        }
+    }
+}
+
+int main() {
+    int n, m, u, v;
+    printf("Enter the number of vertices and edges: ");
+    scanf("%d %d", &n, &m);
+
+    printf("Enter the edges (vertex pairs):\n");
+    for (int i = 0; i < m; i++) {
+        scanf("%d %d", &u, &v);
+        graph[u][v] = 1;
+        graph[v][u] = 1;
+    }
+
+    printf("Enter the source and destination vertices: ");
+    scanf("%d %d", &u, &v);
+
+    for (int i = 0; i < n; i++)
+        visited[i] = 0;
+
+    BFS(u, n);
+
+    if (graph[u][v] != 0)
+        printf("Minimum number of edges between %d and %d is %d\n", u, v, graph[u][v]);
+    else
+        printf("No path exists between %d and %d\n", u, v);
+
+    return 0;
+}
